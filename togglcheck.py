@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from pprint import pprint
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import calendar
 import re
@@ -30,20 +30,26 @@ target_date = datetime.today()
 if len(sys.argv) == 2 and sys.argv[1] == 'last':
     target_date = target_date - relativedelta(months=1)
 
-    print(target_date)
-
     month = target_date.month
     year = target_date.year
+
 else:
     month = target_date.month
     year = target_date.year
 
 last_day = calendar.monthrange(year, month)[1]
 
+start_date = datetime(year, month, 1, tzinfo=timezone.utc).isoformat()
+
+end_date = datetime(year, month, last_day, tzinfo=timezone.utc) + timedelta(1) - relativedelta(seconds=1)
+end_date = end_date.isoformat()
+
+print('Start date: {}'.format(start_date))
+print('End date: {}'.format(end_date))
 
 response = toggl_client.query('/time_entries', params=dict(
-    start_date=datetime(year, month, 1, tzinfo=timezone.utc).isoformat(),
-    end_date=datetime(year, month, last_day, tzinfo=timezone.utc).isoformat()
+    start_date=start_date,
+    end_date=end_date
 ))
 
 
@@ -99,13 +105,15 @@ if entries_count > 1000:
 print()
 print('Entries count: {}'.format(entries_count))
 print('Running entries count: {}'.format(running_count))
-print()
-print('First entry: {}'.format(
-    first_entry.get('start')
-))
-print('Last entry: {}'.format(
-    last_entry.get('start')
-))
+
+if first_entry:
+    print()
+    print('First entry: {}'.format(
+        first_entry.get('start')
+    ))
+    print('Last entry: {}'.format(
+        last_entry.get('start')
+    ))
 
 print()
 print('Total duration: {:.0f}h {:.0f}m'.format(
