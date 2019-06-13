@@ -14,7 +14,7 @@ import requests
 
 from api_client import TogglClientApi
 
-description_pattern = config('DESCRIPTION_PATTERN', default=r'\#[a-z0-9]{5}(\s|$)')
+description_pattern = config('DESCRIPTION_PATTERN', default=r'\#[a-z0-9]{5,6}(\s|$)')
 
 settings = {
     'token': config('TOGGL_TOKEN'),
