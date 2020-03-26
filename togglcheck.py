@@ -88,7 +88,8 @@ for item in response.json():
 
     entries_count += 1
 
-    if not bool(re.search(description_pattern, desc)):
+    if not desc or not bool(re.search(description_pattern, desc)):
+        print()
         print('Missing pattern {} in entry description:\n'.format(
             description_pattern
         ))
