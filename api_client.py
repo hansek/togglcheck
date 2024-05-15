@@ -7,7 +7,7 @@ class TogglClientApi(object):
         'username': '',
         'workspace_name': '',
         'base_url': 'https://api.track.toggl.com/api',
-        'ver_api': 8,
+        'ver_api': 9,
         'base_url_report': 'https://api.track.toggl.com/reports/api',
         'ver_report': 2
     }

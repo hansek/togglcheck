@@ -47,7 +47,7 @@ end_date = end_date.isoformat()
 print('Start date: {}'.format(start_date))
 print('End date: {}'.format(end_date))
 
-response = toggl_client.query('/time_entries', params=dict(
+response = toggl_client.query('/me/time_entries', params=dict(
     start_date=start_date,
     end_date=end_date
 ))
@@ -71,7 +71,10 @@ for item in response.json():
     # ))
 
     # process only stopped entries
-    if 'stop' not in item:
+    if item.get('stop') is None:
+        if running_count == 0:
+            print()
+
         running_count += 1
 
         print('Skipped running entry starting at {}'.format(
