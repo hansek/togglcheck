@@ -14,7 +14,7 @@ import requests
 
 from api_client import TogglClientApi
 
-description_pattern = config('DESCRIPTION_PATTERN', default=r'\#[a-z0-9]{5,9}(\s|$)')
+description_pattern = config('DESCRIPTION_PATTERN', default=r'\#[a-z0-9]{5,9}')
 
 settings = {
     'token': config('TOGGL_TOKEN'),
@@ -91,9 +91,20 @@ for item in response.json():
 
     entries_count += 1
 
-    if not desc or not bool(re.search(description_pattern, desc)):
+    match = re.findall(description_pattern, desc)
+
+    if not desc or not bool(match):
         print()
         print('Missing pattern {} in entry description:\n'.format(
+            description_pattern
+        ))
+        pprint(item)
+        exit(1)
+        break
+
+    if len(match) > 1:
+        print()
+        print('Not an unique pattern {} in entry description:\n'.format(
             description_pattern
         ))
         pprint(item)
